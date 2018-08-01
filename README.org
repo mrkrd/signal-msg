@@ -1,0 +1,63 @@
+* signal-msg
+
+Send [[https://signal.org/][Signal]] messages from GNU Emacs using [[https://github.com/AsamK/signal-cli][signal-cli]].
+
+This is not a chat program.  You can only send individual messages.
+No receiving is possible.
+
+** Installation
+
+- Make sure that you have:
+
+  - signal-cli program installed and configured
+
+  - ivy package, e.g., from ELPA (M-x list-packages)
+
+- Clone the repository
+
+#+BEGIN_SRC sh
+git clone https://github.com/mrkrd/signal-msg.git
+#+END_SRC
+
+- Update the load-path
+
+#+BEGIN_SRC elisp
+(add-to-list 'load-path (expand-file-name "~/path/to/signal-msg"))
+#+END_SRC
+
+- Load signal-msg
+
+#+BEGIN_SRC elisp
+(require 'signal-msg)
+#+END_SRC
+
+- Configure your phone number
+
+#+BEGIN_SRC elisp
+(setq signal-msg-username "+14155550132")
+#+END_SRC
+
+
+** Usage
+
+- Call signal-msg-new-message
+
+#+BEGIN_EXAMPLE
+M-x signal-msg-new-message
+#+END_EXAMPLE
+
+- Select contact
+
+- Write message
+
+- Call signal-msg-send
+
+#+BEGIN_EXAMPLE
+C-c C-c
+#+END_EXAMPLE
+
+
+** License
+
+The project is licensed under the GNU General Public License v3 or
+later (GPLv3+).

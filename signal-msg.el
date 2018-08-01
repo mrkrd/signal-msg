@@ -1,14 +1,22 @@
+;;; signal-msg.el --- Send Signal messages with signal-cli
+
+
+;;; Commentary:
+
+;; This pakcages sends Signal messages using signal-cli command line
+;; client.
+
+;; https://github.com/mrkrd/signal-msg
+
+;;; Code:
 
 
 (require 'ivy)
 (require 'json)
 
 
-(defvar signal-msg-username nil)
 
-
-(setq signal-msg--data-file
-)
+(defcustom signal-msg-username nil "Signal phone number with plus sign and the country code.")
 
 
 (defun signal-msg--get-data-json ()
@@ -107,3 +115,7 @@
 
 
 (provide 'signal-msg)
+
+(provide 'signal-msg)
+
+;;; signal-msg.el ends here
