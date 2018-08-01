@@ -1,4 +1,4 @@
-;;; signal-msg.el --- Send Signal messages with signal-cli
+;;; signal-msg.el --- Send Signal messages from GNU Emacs using signal-cli
 
 
 ;;; Commentary:
