@@ -116,6 +116,4 @@
 
 (provide 'signal-msg)
 
-(provide 'signal-msg)
-
 ;;; signal-msg.el ends here
