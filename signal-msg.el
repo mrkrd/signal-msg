@@ -66,13 +66,6 @@
 ;; (signal-msg--select-number)
 
 
-(defun signal-msg-set-number ()
-  (let ((number (signal-msg--select-number)))
-    (setq-local signal-msg-dest-number number)
-    ))
-
-;; (signal-msg-set-number)
-
 
 (defvar signal-msg-mode-map
   (let ((map (make-sparse-keymap)))
@@ -102,13 +95,15 @@
   )
 
 
+
 (defun signal-msg-new-message ()
   (interactive)
-  (let ((buffer (generate-new-buffer "*new singal message*"))
+  (let ((number (signal-msg--select-number))
+        (buffer (generate-new-buffer "*new singal message*"))
         )
     (switch-to-buffer buffer)
     (signal-msg-mode)
-    (signal-msg-set-number)
+    (setq-local signal-msg-dest-number number)
     ))
 
 ;; (signal-msg-new-message)
