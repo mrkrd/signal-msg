@@ -11,7 +11,6 @@
 ;;; Code:
 
 
-(require 'ivy)
 (require 'json)
 
 
@@ -57,7 +56,7 @@
 (defun signal-msg--select-number ()
   (let* ((lines-and-numbers (signal-msg--lines-and-numbers))
          (lines (mapcar 'car lines-and-numbers))
-         (line (ivy-read "Contact: " lines))
+         (line (completing-read "Contact: " lines))
          (number (cdr (assoc line lines-and-numbers)))
          )
     number
