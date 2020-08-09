@@ -7,31 +7,27 @@ No receiving is possible.
 
 ** Installation
 
-- Make sure that you have:
+- Make sure that you have [[https://github.com/AsamK/signal-cli][signal-cli]] program installed and configured.
 
-  - signal-cli program installed and configured
-
-  - ivy package, e.g., from ELPA (M-x list-packages)
-
-- Clone the repository
+- Clone the repository:
 
 #+BEGIN_SRC sh
 git clone https://github.com/mrkrd/signal-msg.git
 #+END_SRC
 
-- Update the load-path
+- Update the load-path:
 
 #+BEGIN_SRC elisp
 (add-to-list 'load-path (expand-file-name "~/path/to/signal-msg"))
 #+END_SRC
 
-- Load signal-msg
+- Load signal-msg:
 
 #+BEGIN_SRC elisp
 (require 'signal-msg)
 #+END_SRC
 
-- Configure your phone number
+- Configure your phone number:
 
 #+BEGIN_SRC elisp
 (setq signal-msg-username "+14155550132")
@@ -40,7 +36,7 @@ git clone https://github.com/mrkrd/signal-msg.git
 
 ** Usage
 
-- Call signal-msg-new-message
+- Call =signal-msg-new-message=:
 
 #+BEGIN_EXAMPLE
 M-x signal-msg-new-message
@@ -50,7 +46,7 @@ M-x signal-msg-new-message
 
 - Write message
 
-- Call signal-msg-send
+- Call =signal-msg-send=
 
 #+BEGIN_EXAMPLE
 C-c C-c
