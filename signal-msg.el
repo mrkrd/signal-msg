@@ -19,7 +19,7 @@
 
 
 (defun signal-msg--get-data-json ()
-  (let ((data-file (expand-file-name (concat "~/.config/signal/data/"
+  (let ((data-file (expand-file-name (concat "~/.local/share/signal-cli/data/"
                                              signal-msg-username))))
     (with-temp-buffer
       (insert-file-contents data-file)
