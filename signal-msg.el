@@ -31,11 +31,11 @@
 
 
 (defun signal-msg--contact-to-line (contact)
-  "Convert a contact alist to a cons cell with (name-number . number)."
+  "Convert a contact alist to a cons cell with (\"name: number\" . (number . name))."
   (let* ((name (alist-get 'name contact))
          (number (alist-get 'number contact))
          )
-    (cons (concat name ": " number)  number)
+    (cons (concat name ": " number)  (cons number name))
     ))
 
 ;; (signal-msg--contact-to-line '((name . "Some Name") (number . "+123456")))
@@ -53,16 +53,15 @@
 ;; (signal-msg--lines-and-numbers)
 
 
-(defun signal-msg--select-number ()
+(defun signal-msg--select-number-name ()
   (let* ((lines-and-numbers (signal-msg--lines-and-numbers))
-         (lines (mapcar 'car lines-and-numbers))
-         (line (completing-read "Contact: " lines))
-         (number (cdr (assoc line lines-and-numbers)))
+         (line (completing-read "Contact: " lines-and-numbers nil t))
+         (number-name (cdr (assoc line lines-and-numbers)))
          )
-    number
+    number-name
     ))
 
-;; (signal-msg--select-number)
+;; (signal-msg--select-number-name)
 
 
 
@@ -95,6 +94,7 @@
       (warn (format "Something went wrong. signal-cli returned %d" exit-code)))
     ))
 
+
 (defun signal-msg-cancel ()
   (interactive)
   (when (y-or-n-p "Cancel? ")
@@ -102,12 +102,14 @@
   )
 
 
-
 (defun signal-msg-new-message ()
   (interactive)
-  (let ((number (signal-msg--select-number))
-        (buffer (generate-new-buffer "*new singal message*"))
-        )
+  (let* ((number-name (signal-msg--select-number-name))
+         (number (car number-name))
+         (name (cdr number-name))
+         (buf-name (format "*new signal msg to %s %s*" name number))
+         (buffer (generate-new-buffer buf-name))
+         )
     (switch-to-buffer buffer)
     (signal-msg-mode)
     (setq-local signal-msg-dest-number number)
