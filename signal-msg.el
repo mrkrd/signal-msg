@@ -112,6 +112,8 @@
          )
     (switch-to-buffer buffer)
     (signal-msg-mode)
+    (turn-off-auto-fill)
+    (visual-line-mode 1)
     (setq-local signal-msg-dest-number number)
     ))
 
