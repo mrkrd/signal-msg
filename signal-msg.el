@@ -81,17 +81,20 @@
 
 (defun signal-msg-send ()
   (interactive)
-  (call-process-region
-   (point-min)
-   (point-max)
-   "signal-cli"
-   nil                                  ;delete
-   nil                                  ;destination
-   nil                                  ;display
-   "-u" signal-msg-username "send" signal-msg-dest-number
-   )
-  (kill-buffer)
-  )
+  (let ((exit-code (call-process-region
+                    (point-min)
+                    (point-max)
+                    "signal-cli"
+                    nil                                  ; delete
+                    nil                                  ; buffer
+                    nil                                  ; display
+                    "-u" signal-msg-username "send" signal-msg-dest-number
+                    )))
+    (if (= exit-code 0)
+        (kill-buffer)
+      (warn (format "Something went wrong. signal-cli returned %d" exit-code)))
+    ))
+
 
 
 
