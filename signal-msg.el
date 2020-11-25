@@ -69,7 +69,7 @@
 (defvar signal-msg-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") 'signal-msg-send)
-    (define-key map (kbd "C-c C-k") 'kill-buffer)
+    (define-key map (kbd "C-c C-k") 'signal-msg-cancel)
     map)
   "Keymap for `signal-msg-mode'.")
 
@@ -95,6 +95,11 @@
       (warn (format "Something went wrong. signal-cli returned %d" exit-code)))
     ))
 
+(defun signal-msg-cancel ()
+  (interactive)
+  (when (y-or-n-p "Cancel? ")
+    (kill-buffer))
+  )
 
 
 
