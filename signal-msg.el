@@ -18,9 +18,11 @@
 (defcustom signal-msg-username nil "Signal phone number with plus sign and the country code.")
 
 
+
 (defun signal-msg--get-data-json ()
-  (let ((data-file (expand-file-name (concat "~/.local/share/signal-cli/data/"
-                                             signal-msg-username))))
+  (let ((data-file (expand-file-name
+                    (concat "~/.local/share/signal-cli/data/"
+                            signal-msg-username ".d/recipients-store"))))
     (with-temp-buffer
       (insert-file-contents data-file)
       (json-read)
@@ -30,38 +32,63 @@
 ;; (signal-msg--get-data-json)
 
 
-(defun signal-msg--contact-to-line (contact)
-  "Convert a contact alist to a cons cell with (\"name: number\" . (number . name))."
-  (let* ((name (alist-get 'name contact))
-         (number (alist-get 'number contact))
-         )
-    (cons (concat name ": " number)  (cons number name))
-    ))
-
-;; (signal-msg--contact-to-line '((name . "Some Name") (number . "+123456")))
+(defun signal-msg--recipients-to-label-and-number (recipient)
+  (let* ((number (alist-get 'number recipient))
+         (contact (alist-get 'contact recipient))
+         (name (alist-get 'name contact)))
+    (cons (concat name " " number) number)
+  ))
 
 
-(defun signal-msg--lines-and-numbers ()
+(defun signal-msg--labels-and-numbers ()
+  "Return an alist of labels (concat of name and number) → phone numbers."
   (let* ((data (signal-msg--get-data-json))
-         (contact-store (alist-get 'contactStore data))
-         (contacts (alist-get 'contacts contact-store))
+         (recipients (alist-get 'recipients data))
          )
-    (mapcar 'signal-msg--contact-to-line contacts)
+    (mapcar 'signal-msg--recipients-to-label-and-number recipients)
     ))
 
+;; (signal-msg--labels-and-numbers)
 
-;; (signal-msg--lines-and-numbers)
+
+;; Below (commented out) is the implementation that gets a list of
+;; contacts from the CLI tool.  However, it's too slow, so the
+;; implementation that parses internal JSON store of signal-cli is
+;; enabled instead.
+;;
+;; (defun signal-msg--parse-contact-list ()
+;;   (let (name-tel)
+;;     (goto-char (point-min))
+;;     (while (re-search-forward
+;;             (rx line-start
+;;                 "Number: "
+;;                 (group "+" (one-or-more digit)) " Name: "
+;;                 (group (zero-or-more nonl))
+;;                 " Blocked: " (or "false" "true")
+;;                 )
+;;             nil t)
+;;       (setq name-tel
+;;             (append name-tel (list (cons (match-string 2) (match-string 1)))))
+;;       )
+;;     (mapcar (lambda (c) (cons (concat (car c) " " (cdr c)) (cdr c))) name-tel)
+;;     )
+;;   )
+;;
+;; (defun signal-msg--labels-and-numbers ()
+;;   (with-temp-buffer
+;;     (progn
+;;       (call-process
+;;        "signal-cli"
+;;        nil                                    ; infile
+;;        (current-buffer)                       ; destination
+;;        nil                                    ; display
+;;        "-u" signal-msg-username "listContacts"
+;;        )
+;;       (signal-msg--parse-contact-list)
+;;       )))
 
 
-(defun signal-msg--select-number-name ()
-  (let* ((lines-and-numbers (signal-msg--lines-and-numbers))
-         (line (completing-read "Contact: " lines-and-numbers nil t))
-         (number-name (cdr (assoc line lines-and-numbers)))
-         )
-    number-name
-    ))
-
-;; (signal-msg--select-number-name)
+;; (signal-msg--labels-and-numbers)
 
 
 
@@ -104,10 +131,10 @@
 
 (defun signal-msg-new-message ()
   (interactive)
-  (let* ((number-name (signal-msg--select-number-name))
-         (number (car number-name))
-         (name (cdr number-name))
-         (buf-name (format "*new signal msg to %s %s*" name number))
+  (let* ((labels-and-numbers (signal-msg--labels-and-numbers))
+         (label (completing-read "Signal Contact: " labels-and-numbers nil t))
+         (number (cdr (assoc-string label labels-and-numbers)))
+         (buf-name (format "*new signal msg to %s*" label))
          (buffer (generate-new-buffer buf-name))
          )
     (switch-to-buffer buffer)
