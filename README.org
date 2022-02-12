@@ -9,6 +9,13 @@ No receiving is possible.
 
 - Make sure that you have [[https://github.com/AsamK/signal-cli][signal-cli]] program installed and configured.
 
+  - For example, official [[https://github.com/AsamK/signal-cli/wiki/Quickstart][documentation]] of signal-cli explains how to
+    link it.  The command below works for me for linking, YMMV.
+
+    #+begin_src sh
+    signal-cli link --name silver | head -1 | qrencode --type=UTF8
+    #+end_src
+
 - Clone the repository:
 
 #+BEGIN_SRC sh
